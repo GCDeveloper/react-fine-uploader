@@ -121,12 +121,18 @@ class Gallery extends Component {
                     exit={!this.props.animationsDisabled}
                 >
                     {
-                        this.state.visibleFiles.map(({ id, status, fromServer }) => (
+                        this.state.visibleFiles.map(({ id, status, fromServer }) => {
+                            let submission = thumbnailProps.uploadSubmissions.filter((submission) => submission.id === id)
+                            if(submission.length == 1) {
+                                submission = submission[0]
+                            }
+                            return (
                             <CSSTransition
                                 key={id}
                                 classNames="react-fine-uploader-gallery-files"
                                 timeout={{ enter: 500, exit: 300 }}
                             >
+                              {  !submission.hide ?
                                 <li key={ id }
                                     className='react-fine-uploader-gallery-file'
                                 >
@@ -199,8 +205,11 @@ class Gallery extends Component {
                                             />
                                     }
                                 </li>
+                              : <div style={{display: 'none'}}></div> }
                             </CSSTransition>
-                        ))
+                            )
+                        }
+                    )
                     }
                 </TransitionGroup>
             </MaybeDropzone>

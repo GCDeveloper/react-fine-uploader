@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-
+import EditableStuff from '../components/editableStuff.js'
 class Filename extends Component {
     static propTypes = {
         id: PropTypes.number.isRequired,
-        uploader: PropTypes.object.isRequired
+        uploader: PropTypes.object.isRequired,
+        editable: PropTypes.bool,
+        onFilenameChange: PropTypes.func
     };
 
     constructor(props) {
@@ -22,10 +24,28 @@ class Filename extends Component {
     }
 
     render() {
+      //console.log(".... editable?", "filename:", this.state.filename, this.state.filename.indexOf('(thumbnail).') === -1);
         return (
-            <span className={ `react-fine-uploader-filename ${this.props.className || ''}` }>
-                { this.state.filename }
-            </span>
+          <React.Fragment>
+            {
+              this.props.editable ?
+              <EditableStuff
+                key={this.props.id}
+                textToEdit={this.state.filename}
+                labelClassName="editable"
+                inputPlaceHolder={this.state.filename}
+                editable={true/*this.state.filename.indexOf('(thumbnail).') === -1*/ /* don't allow to edit thumbail name */ }
+                action = {
+                  (editedText) => {
+                      console.log('setting new filename:', editedText)
+                      this.props.uploader.methods.setName(this.props.id, editedText)
+                  }
+                }/>
+              : <span className={ `react-fine-uploader-filename ${this.props.className || ''}` }>
+                  { this.state.filename }
+              </span>
+            }
+          </React.Fragment>
         )
     }
 

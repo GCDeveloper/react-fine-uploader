@@ -6,7 +6,7 @@ import Placeholder from './placeholder'
 import NotAvailablePlaceholder from './not-available-placeholder'
 import WaitingPlaceholder from './waiting-placeholder'
 
-export const defaultMaxSize = 120 
+export const defaultMaxSize = 120
 export const notAvailableStatus = 'not-available'
 export const waitingStatus = 'waiting'
 
@@ -18,7 +18,8 @@ class Thumbnail extends Component {
         maxSize: PropTypes.number,
         notAvailablePlaceholder: PropTypes.element,
         uploader: PropTypes.object.isRequired,
-        waitingPlaceholder: PropTypes.element
+        waitingPlaceholder: PropTypes.element,
+        uploadSubmissions: PropTypes.array
     };
 
     static defaultProps = {
@@ -79,14 +80,25 @@ class Thumbnail extends Component {
     }
 
     get _maybePlaceholder() {
-        if (this._failure) {
+        if (this._failure){
             const notAvailableImage = (
                 <NotAvailablePlaceholder maxSize={ this.props.maxSize } />
             )
-            
+            let thumbnail
+            console.log('thumbnail for', this.props.id, 'heres submissions:', this.props.uploadSubmissions)
+            let submission = this.props.uploadSubmissions.filter(({id}) => id === this.props.id)
+            if(submission.length == 1) {
+                submission = submission[0]
+                if(submission.thumbnailComponent) {
+                    thumbnail = submission.thumbnailComponent
+                }
+            }
+            if(!thumbnail) {
+                thumbnail = this.props.notAvailablePlaceholder || notAvailableImage
+            }
             return (
                 <Placeholder className={ `react-fine-uploader-thumbnail ${this.props.className || ''}` }
-                             image={ this.props.notAvailablePlaceholder || notAvailableImage }
+                             image={ thumbnail }
                              size={ this.props.maxSize }
                              status={ notAvailableStatus }
                 />

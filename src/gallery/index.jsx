@@ -38,7 +38,10 @@ class Gallery extends Component {
         'pauseResumeButton-pauseChildren': <PauseIcon />,
         'pauseResumeButton-resumeChildren': <PlayIcon />,
         'retryButton-children': <PlayIcon />,
-        'thumbnail-maxSize': 130
+        'thumbnail-maxSize': 130,
+        'thumbnail-uploadSubmissions': [],
+        'filename-editable': false,
+        'filename-onFilenameChange': Function.Prototype
     }
 
     constructor(props) {
@@ -65,7 +68,7 @@ class Gallery extends Component {
                     const visibleFileIndex = this._findFileIndex(id)
                     if (visibleFileIndex < 0) {
                         visibleFiles.push({ id, fromServer: true })
-                    } 
+                    }
                 }
                 this._updateVisibleFileStatus(id, status)
             }
@@ -111,8 +114,8 @@ class Gallery extends Component {
                              uploader={ uploader }
                              { ...progressBarProps }
                 />
-                <TransitionGroup 
-                    component="ul" 
+                <TransitionGroup
+                    component="ul"
                     className='react-fine-uploader-gallery-files'
                     enter={!this.props.animationsDisabled}
                     exit={!this.props.animationsDisabled}
